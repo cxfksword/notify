@@ -15,6 +15,7 @@ require (
 	github.com/cschomburg/go-pushbullet v0.0.0-20171206132031-67759df45fbb
 	github.com/dghubble/go-twitter v0.0.0-20201011215211-4b180d0cc78d
 	github.com/dghubble/oauth1 v0.7.0
+	github.com/fastwego/wxwork v1.0.0-beta.8
 	github.com/go-chi/chi v4.1.2+incompatible // indirect
 	github.com/go-telegram-bot-api/telegram-bot-api v4.6.4+incompatible
 	github.com/golang/protobuf v1.4.3 // indirect
