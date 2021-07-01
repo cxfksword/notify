@@ -12,11 +12,13 @@ import (
 
 // WeWork struct holds necessary data to send wechat corporation message.
 type WeWork struct {
-	corpID string
-	agentID string
+	corpID     string
+	agentID    string
 	corpSecret string
-	toUser []string
-	msgType string 
+	toUser     []string
+	msgType    string
+
+	url string
 }
 
 // New returns a new instance of a wechat corporation message service.
@@ -25,11 +27,15 @@ type WeWork struct {
 func New(corpID, agentID, corpSecret string) *WeWork {
 	return &WeWork{
 		corpID:     corpID,
-		agentID:      agentID,
+		agentID:    agentID,
 		corpSecret: corpSecret,
-		toUser: []string{},
-		msgType: "text",
+		toUser:     []string{},
+		msgType:    "textcard",
 	}
+}
+
+func (m *WeWork) SetUrl(url string) {
+	m.url = url
 }
 
 // AddReceivers takes wechat corporation user IDs and adds them to the internal user ID list. The Send method will send
@@ -43,21 +49,19 @@ func (m *WeWork) AddReceivers(user ...string) {
 func (m WeWork) Send(subject, message string) error {
 	corp := corporation.New(corporation.Config{Corpid: m.corpID})
 	app := corp.NewApp(corporation.AppConfig{
-		AgentId:        m.agentID,
-		Secret:         m.corpSecret,
+		AgentId: m.agentID,
+		Secret:  m.corpSecret,
 	})
 
-
 	data := payload{
-		AgentID : m.agentID,
-		MsgType : m.msgType,
-		ToUser : strings.Join(m.toUser, "|"),
-		Text: textMsg{
-			Content:subject,
+		AgentID: m.agentID,
+		MsgType: m.msgType,
+		ToUser:  strings.Join(m.toUser, "|"),
+		Textcard: textCard{
+			Title:       subject,
+			Description: message,
+			Url:         m.url,
 		},
-	}
-	if message != "" {
-		data.Text.Content = fmt.Sprintf("%s\n%s", subject, message)
 	}
 	payloadJSON, _ := json.Marshal(data)
 
@@ -68,7 +72,7 @@ func (m WeWork) Send(subject, message string) error {
 
 	var result apiResult
 	err = json.Unmarshal(resp, &result)
-	if (err == nil && result.ErrCode != 0) {
+	if err == nil && result.ErrCode != 0 {
 		return errors.Wrapf(fmt.Errorf(result.ErrMsg), "failed to send message to wechat corporation users '%s'", data.ToUser)
 	}
 

@@ -10,3 +10,4 @@ debug.test
 # Server specific
 server/certs/
 tmp/
+vendor/

@@ -2,12 +2,14 @@ package wework
 
 // payload struct holds message data
 type payload struct {
-	ToUser string `json:"touser"`
-	MsgType string `json:"msgtype"`
-	AgentID string `json:"agentid"`
-	Text textMsg `json:"text"`
+	ToUser   string   `json:"touser"`
+	MsgType  string   `json:"msgtype"`
+	AgentID  string   `json:"agentid"`
+	Textcard textCard `json:"textcard"`
 }
 
-type textMsg struct {
-   Content string `json:"content"`
+type textCard struct {
+	Title       string `json:"title"`
+	Description string `json:"description"`
+	Url         string `json:"url"`
 }
